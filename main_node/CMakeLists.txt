@@ -50,16 +50,15 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   joystick.msg
-   joystick_btn.msg
-   servo.msg
-)
+   lightDetected.msg
+   servoComplete.msg
+   )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  GetJoystickData.srv
-)
+#add_service_files(
+#  FILES
+#  
+#)
 
 ## Generate actions in the 'action' folder
 # add_action_files(

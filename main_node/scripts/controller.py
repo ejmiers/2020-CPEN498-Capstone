@@ -2,16 +2,23 @@
 
 import rospy
 from std_msgs.msg import String
-from main_node.msg import joystick, joystick_btn, servo
+from main_node.msg import lightDetected, fsrTriggered, servoExtend, servoRetract, servoComplete
 
-def callback_analog(data):
-    rospy.loginfo(rospy.get_caller_id() + 'Received Data: x: %s, y: %s', data.x, data.y)
+def callback_lightDetected(data):
+    rospy.loginfo(rospy.get_caller_id() + 'High Light Intensity Detected: %s', data.value)
 
-def callback_jsButton(data):
-    rospy.loginfo(rospy.get_caller_id() + 'Button Presed')
+#def callback_servoExtend(data):
+#    rospy.loginfo(rospy.get_caller_id() + 'Servo Extending')
 
-def callback_servo(data):
-    rospy.loginfo(rospy.get_caller_id() + 'Servo Position: %s', data.pos)
+#def callback_servoRetract(data):
+#    rospy.loginfo(rospy.get_caller_id() + 'Servo Retracting')
+
+#def callback_fsrTriggered(data):
+#    rospy.loginfo (rospy.get_caller_id() + 'FSR Triggered with value: %s', data.triggered)
+
+def callback_servoComplete(data):
+    rospy.loginfo(rospy.get_caller_id() + 'Servo Completed with FSR Value: %s', data.fsrValue)
+
 
 def listener():
 
@@ -22,9 +29,11 @@ def listener():
     # run simultaneously.
     rospy.init_node('main_node', anonymous=True)
 
-    rospy.Subscriber('joystick_analog', joystick, callback_analog)
-    rospy.Subscriber('joystick_btn', joystick_btn, callback_jsButton)
-    rospy.Subscriber('servo', servo, callback_servo)
+    rospy.Subscriber('lightDetected', lightDetected, callback_lightDetected)
+    #rospy.Subscriber('fsrTriggered', fsrTriggered, callback_fsrTriggered)
+    #rospy.Subscriber('servoExtend', servoExtend, callback_servoExtend)
+    #rospy.Subscriber('servoRetract', servoRetract, callback_servoRetract)
+    rospy.Subscriber('servoComplete', servoComplete, callback_servoComplete)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()

@@ -50,8 +50,11 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   lightDetected.msg
-   servoComplete.msg
+   move_dt.msg
+   comp_stop.msg
+   light_detected.msg
+   move_arm.msg
+   move_on.msg
    )
 
 ## Generate services in the 'srv' folder

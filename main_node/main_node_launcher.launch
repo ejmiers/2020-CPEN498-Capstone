@@ -1,11 +1,10 @@
 <launch>
 	<node name="servo_fsr_node" pkg="rosserial_python" type="serial_node.py" output="screen">
-		<param name="port" value="/dev/ttyACM0"/>
-		<param name="baud" value="57600"/>
-	</node>
-	<node name="light_sensor_node" pkg="rosserial_python" type="serial_node.py" output="screen">
 		<param name="port" value="/dev/ttyACM1"/>
 		<param name="baud" value="57600"/>
 	</node>
-	<node name="main_node" pkg="main_node" type="controller.py" output="screen" />
+	<node name="light_sensor_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+		<param name="port" value="/dev/ttyACM0"/>
+		<param name="baud" value="57600"/>
+	<node name="main_controller_node" pkg="main_node" type="main_controller_node.py" output="screen" />
 </launch>

@@ -34,7 +34,7 @@ class MainNode(object):
         9,1,2]
 
         # Pointer to keep track of placement in list
-        self.listPointer = 0
+        self.listIndex = 0
         
         # Initialize the node
         rospy.init_node('main_controller_node')
@@ -58,27 +58,29 @@ class MainNode(object):
             exit()
         
         # Get the next element in the sequence and compare it with the current one
-        if (msg.moveOn == 1) and (self.listPointer < len(self.PI_LIST) - 1):
-            currentDigit = self.PI_LIST[self.listPointer]
-            nextDigit = self.PI_LIST[self.listPointer+1]
+        if (msg.moveOn == 1) and (self.listIndex < len(self.PI_LIST) - 1):
+            currentDigit = self.PI_LIST[self.listIndex]
+            nextDigit = self.PI_LIST[self.listIndex+1]
             
-            if (currentDigit > nextDigit):
+            #if (currentDigit > nextDigit):
                 #Instruct drivetrain to move left
-                self.moveDtPub.publish(direction=0)
-            elif (currentDigit < nextDigit):
+                #self.moveDtPub.publish(direction=0)
+            #elif (currentDigit < nextDigit):
                 #Instruct drivetrain to move right
-                self.moveDtPub.publish(direction=1)
+                #self.moveDtPub.publish(direction=1)
+            if (currentDigit != nextDigit):
+                self.moveDtPub.publish(index=self.listIndex+1)
             else:
                 #Current==Next, drivetrain doesn't need to move, tell arm to move
                 self.moveArmPub.publish(move=1)
         
         # Increment the list pointer
-        self.listPointer += 1
+        self.listIndex += 1
 
     def run(self):
         
         # Publish first Message to drivetrain to move left
-        self.moveDtPub.publish(direction=0)
+        self.moveDtPub.publish(index=0)
 
         # Main execution Loop
         while not rospy.is_shutdown():

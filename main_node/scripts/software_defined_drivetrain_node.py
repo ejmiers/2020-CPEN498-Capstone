@@ -38,12 +38,7 @@ class SDDT(object):
 		
 	# Callback to print "move_dt" message contents to terminal when message is received
 	def moveDtCallback(self, msg):
-		if (msg.direction == 0):
-			rospy.loginfo(rospy.get_caller_id() + ": Drivetrain instructed to go LEFT")
-		elif (msg.direction == 1):
-			rospy.loginfo(rospy.get_caller_id() + ": Drivetrain instructed to go RIGHT")
-		else:
-			rospy.loginfo(rospy.get_caller_id() + ": ERROR: move_dt.direction contains an unknown value: %s", msg.direction)
+		rospy.loginfo(rospy.get_caller_id() + ": Drivetrain instructed to go to digit at index %s", msg.index)
 		
 		
 	def run(self):

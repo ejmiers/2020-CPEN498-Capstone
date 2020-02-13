@@ -49,7 +49,7 @@ void moveArmCallback(const main_node::move_arm& msg) {
     }
     
     //Wait for atleast 25ms while the button is pushed in (per IEEE competition guidelines)
-    delay(25);
+    delay(500);
     
     //Reset the servo motor's position to 0
     servo.write(0);
@@ -77,8 +77,10 @@ ros::Subscriber<main_node::comp_stop> compStopSub("comp_stop", &compStopCallback
 
 //Intialize/Set ROS node, publishers/subscribers, flags
 void setup() {
-  Serial.begin(9600);
-  //nh.getHardware()->setBaud(9600);
+//  Serial.begin(9600);
+//  nh.getHardware()->setBaud(9600);
+  Serial.begin(56000);
+  nh.getHardware()->setBaud(56000);
   servo.attach(SERVO_PIN);
   servo.write(0);
   stopLoop = 0;
@@ -95,6 +97,5 @@ void loop() {
       nh.spinOnce();
       delay(100);  
     }
-    Serial.print("OUT OF LOOP");
 }
 

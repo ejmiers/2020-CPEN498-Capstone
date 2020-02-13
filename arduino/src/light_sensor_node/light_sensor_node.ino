@@ -38,8 +38,8 @@ ros::Subscriber<main_node::comp_stop> compStopSub("comp_stop", &compStopCallback
 
 //Intialize/Set ROS node, publishers/subscribers, flags
 void setup() {
-  Serial.begin(9600);
-  //nh.getHardware()->setBaud(9600);
+  Serial.begin(56000);
+  nh.getHardware()->setBaud(56000);
   stopLoop = 0;
   
   nh.initNode();
@@ -59,9 +59,10 @@ void loop() {
         lightDetectedMsg.detected = LIGHT_DETECTED;
         lightDetectedPub.publish(&lightDetectedMsg);
         
-        nh.spinOnce();
-        delay(5000);
+        delay(2500);
       }
+      
+      nh.spinOnce();
+      delay(100);
   }
-  //Serial.println("OUT OF LOOP");
 }

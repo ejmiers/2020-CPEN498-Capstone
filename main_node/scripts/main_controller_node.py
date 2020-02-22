@@ -8,7 +8,7 @@
 
 import time
 import rospy
-from main_node.msg import comp_stop, move_dt, move_arm, move_on
+from main_node.msg import comp_stop, move_dt, move_on
 
 class MainNode(object):
     
@@ -43,9 +43,8 @@ class MainNode(object):
         rospy.Subscriber('move_on', move_on, self.moveOnCallback)
 
         # Initialize Publishers
-        self.compStopPub = rospy.Publisher('comp_stop', comp_stop, queue_size=1)
-        self.moveDtPub = rospy.Publisher('move_dt', move_dt, queue_size=1)
-        self.moveArmPub = rospy.Publisher('move_arm', move_arm, queue_size=1)
+        self.compStopPub = rospy.Publisher("comp_stop", comp_stop, queue_size=1)
+        self.moveDtPub = rospy.Publisher("move_dt", move_dt, queue_size=1)
 
     # Callback function for "move_on" messages
     # Checks the current sequence of pi and will determine which way to move the drivetrain
@@ -60,27 +59,32 @@ class MainNode(object):
         # Get the next element in the sequence and compare it with the current one
         if (msg.moveOn == 1) and (self.listIndex < len(self.PI_LIST) - 1):
             currentDigit = self.PI_LIST[self.listIndex]
-            nextDigit = self.PI_LIST[self.listIndex+1]
-            
-            #if (currentDigit > nextDigit):
-                #Instruct drivetrain to move left
-                #self.moveDtPub.publish(direction=0)
-            #elif (currentDigit < nextDigit):
-                #Instruct drivetrain to move right
-                #self.moveDtPub.publish(direction=1)
+            nextDigit = self.PI_LIST[self.listIndex+1]          
+	
             if (currentDigit != nextDigit):
-                self.moveDtPub.publish(index=self.listIndex+1)
+		
+		msg = move_dt()
+		msg.currentDigit = currentDigit
+		msg.nextDigit = nextDigit
+		self.moveDtPub.publish(msg)
+		rospy.loginfo(rospy.get_caller_id() + ":Published to DT with values %s, %s", currentDigit, nextDigit)
             else:
                 #Current==Next, drivetrain doesn't need to move, tell arm to move
                 self.moveArmPub.publish(move=1)
+		rospy.loginfo(rospy.get_caller_id() + ":DT BYPASSED with values %s, %s", currentDigit, nextDigit)
         
         # Increment the list pointer
         self.listIndex += 1
 
     def run(self):
-        
+        rospy.sleep(5)
         # Publish first Message to drivetrain to move left
-        self.moveDtPub.publish(index=0)
+        msg = move_dt()
+	msg.currentDigit = 5
+	msg.nextDigit = 3
+	self.moveDtPub.publish(msg)
+	rospy.loginfo(rospy.get_caller_id() + ": Sent initial message with values %s, %s", msg.currentDigit, msg.nextDigit)
+
 
         # Main execution Loop
         while not rospy.is_shutdown():
@@ -88,6 +92,7 @@ class MainNode(object):
             # Verify that the comp time has not expired, publish a halting message if so
             if (time.time() >= self.stopTime):
                 self.compStopPub.publish(stop=1)
+		rospy.loginfo(rospy.get_caller_id() + ": 3 Minutes expired, comp_stop message sent.")
                 exit()
             
             rospy.sleep(1)

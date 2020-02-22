@@ -1,1 +1,2 @@
-int64 index
+int64 currentDigit
+int64 nextDigit

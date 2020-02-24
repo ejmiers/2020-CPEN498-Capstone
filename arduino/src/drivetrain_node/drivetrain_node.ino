@@ -96,6 +96,10 @@ long read_ultra(){
 
   // convert the time into a distance
   cm = microsecondsToCentimeters(duration);
+  
+  char cBuff[4];
+  dtostrf(cm, 4, 0, cBuff);
+  nh.loginfo(cBuff);
   return cm;
 }
 
@@ -125,7 +129,7 @@ void moveDTCallback(const main_node::move_dt& msg) {
         motorLeft.write(100);
         motorRight.write(80);
         currLoc = read_ultra();
-        if(stop_Distance+2 >= currLoc && stop_Distance+2 <= currLoc){    //change this to stop_Distance >= read_ultra()
+        if(stop_Distance+2 >= read_ultra() && stop_Distance+2 <= read_ultra()){    //change this to stop_Distance >= read_ultra()
           nh.loginfo("At Button, greater than");
           char cBuff[4];
           dtostrf(currLoc, 4, 0, cBuff);
@@ -141,7 +145,7 @@ void moveDTCallback(const main_node::move_dt& msg) {
         motorLeft.write(80);
         motorRight.write(100);
         currLoc = read_ultra();
-        if(stop_Distance+2 <= currLoc && stop_Distance+2 >= currLoc){    //change this to stop_Distance >= read_ultra()
+        if(stop_Distance+2 <= read_ultra() && stop_Distance+2 >= read_ultra()){    //change this to stop_Distance >= read_ultra()
           nh.loginfo("At Button, less than");
           char cBuff[4];
           dtostrf(currLoc, 4, 0, cBuff);
@@ -150,7 +154,7 @@ void moveDTCallback(const main_node::move_dt& msg) {
         }
       }
       
-      if (counter >= 2) {
+      if (counter >= 1) {
          motorLeft.detach();
          motorRight.detach();
          delay(1000);  

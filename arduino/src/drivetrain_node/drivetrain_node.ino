@@ -109,13 +109,11 @@ void moveOnCallback(const main_node::move_on& msg) {
   }
 }
 
-void moveDTCallback(const main_node::move_dt& msg) {
-  //PI_Index=0;  
+void moveDTCallback(const main_node::move_dt& msg) { 
   int currentDigit = msg.currentDigit;
   int nextDigit = msg.nextDigit;
-  int publisher = 0;
   long stop_Distance = Button_Distances[nextDigit];
-  int currLoc = read_ultra();
+  int currLoc;
   int counter = 0;
   nh.loginfo("Made it to Drivetrain callback");
  
@@ -123,12 +121,11 @@ void moveDTCallback(const main_node::move_dt& msg) {
       nh.spinOnce();
       
       if(currentDigit > nextDigit){  //move left
-        currLoc = read_ultra();
         motorLeft.attach(10);
         motorRight.attach(9);
+        currLoc = read_ultra();
         motorLeft.write(110);
         motorRight.write(70);
-        currLoc = read_ultra();
         if(stop_Distance+2 >= currLoc && stop_Distance-2 <= currLoc){    //change this to stop_Distance >= read_ultra()
           nh.loginfo("At Button, greater than");
           char cBuff[4];
@@ -139,12 +136,11 @@ void moveDTCallback(const main_node::move_dt& msg) {
       }
       
       else if(currentDigit < nextDigit){  //move right
-        currLoc = read_ultra();
         motorLeft.attach(10);
         motorRight.attach(9);
+        currLoc = read_ultra();
         motorLeft.write(80);
         motorRight.write(100);
-        currLoc = read_ultra();
         if(stop_Distance-2 <= currLoc && stop_Distance+2 >= currLoc){    //change this to stop_Distance >= read_ultra()
           nh.loginfo("At Button, less than");
           char cBuff[4];
@@ -152,11 +148,17 @@ void moveDTCallback(const main_node::move_dt& msg) {
           nh.loginfo(cBuff);
           counter ++;
         }
+         
+        if(stop_Distance-2 <= currLoc && stop_Distance+2 >= currLoc){
+           counter++;
+        }
+           
       }
       
       if (counter >= 5) {
          motorLeft.detach();
          motorRight.detach();
+         counter = 0;
          delay(1000);  
             
             

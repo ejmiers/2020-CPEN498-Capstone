@@ -126,10 +126,10 @@ void moveDTCallback(const main_node::move_dt& msg) {
         currLoc = read_ultra();
         motorLeft.attach(10);
         motorRight.attach(9);
-        motorLeft.write(100);
-        motorRight.write(80);
+        motorLeft.write(110);
+        motorRight.write(70);
         currLoc = read_ultra();
-        if(stop_Distance+2 >= read_ultra() && stop_Distance+2 <= read_ultra()){    //change this to stop_Distance >= read_ultra()
+        if(stop_Distance+2 >= currLoc && stop_Distance-2 <= currLoc){    //change this to stop_Distance >= read_ultra()
           nh.loginfo("At Button, greater than");
           char cBuff[4];
           dtostrf(currLoc, 4, 0, cBuff);
@@ -145,7 +145,7 @@ void moveDTCallback(const main_node::move_dt& msg) {
         motorLeft.write(80);
         motorRight.write(100);
         currLoc = read_ultra();
-        if(stop_Distance+2 <= read_ultra() && stop_Distance+2 >= read_ultra()){    //change this to stop_Distance >= read_ultra()
+        if(stop_Distance-2 <= currLoc && stop_Distance+2 >= currLoc){    //change this to stop_Distance >= read_ultra()
           nh.loginfo("At Button, less than");
           char cBuff[4];
           dtostrf(currLoc, 4, 0, cBuff);
@@ -154,7 +154,7 @@ void moveDTCallback(const main_node::move_dt& msg) {
         }
       }
       
-      if (counter >= 1) {
+      if (counter >= 5) {
          motorLeft.detach();
          motorRight.detach();
          delay(1000);  
@@ -218,6 +218,7 @@ void setup(){
 }
 
 void loop(){
+  
   while (stopLoop == 0) {
       nh.spinOnce();
       delay(100);  
